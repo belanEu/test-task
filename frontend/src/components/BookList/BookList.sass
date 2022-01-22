@@ -1,0 +1,34 @@
+$border: 1px solid #999
+.book-list
+    display: flex
+    flex-direction: column
+    width: 100%
+
+    .book
+        display: flex
+        flex-direction: column
+        padding: 15px
+        border-left: $border
+        border-right: $border
+        border-bottom: $border
+
+        .author
+            line-height: 1.3
+
+        .title
+            font-size: 22px
+            font-weight: bold
+
+        .description
+            margin: 15px 0
+
+        .tags
+            display: flex
+            flex-flow: row wrap
+
+            .item
+                padding: 3px
+                background-color: #ddd
+                margin-right: 10px
+                &:last-child
+                    margin-right: none

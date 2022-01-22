@@ -19,7 +19,7 @@ export const Book = ({ data }) => {
             </div>
 
             <div className='tags'>
-                { tags.map(tag => <span key={`${id}-${tag}`} className='item'>{ tag }</span>) }
+                { tags.map(tag => <span key={`${id}-${tag}`} className='tag'>{ tag }</span>) }
             </div>
         </div>
     );

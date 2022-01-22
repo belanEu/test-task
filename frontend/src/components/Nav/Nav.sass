@@ -13,3 +13,14 @@ nav
         text-align: center
         &:first-child
             border-left: $border
+        
+        a
+            color: #000
+            text-decoration: none
+            cursor: pointer
+            &[class='chosen']
+                font-weight: bold
+                cursor: default
+    
+    .chosen
+        border-bottom: none

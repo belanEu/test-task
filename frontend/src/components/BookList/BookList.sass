@@ -45,10 +45,23 @@ $border: 1px solid #999
         .tags
             display: flex
             flex-flow: row wrap
+    
+    .filters
+        display: flex
+        flex-flow: row wrap
+        align-items: center
+        min-height: 150px
+        border: $border
+        border-top: none
+        padding: 40px
+        box-sizing: border-box
+        width: 100%
 
-            .item
-                padding: 3px
-                background-color: #ddd
-                margin-right: 10px
-                &:last-child
-                    margin-right: none
+        .text
+            margin-right: 10px
+            white-space: nowrap
+
+    .tag
+        padding: 3px
+        background-color: #ddd
+        margin-right: 10px

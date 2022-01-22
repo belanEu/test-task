@@ -7,9 +7,11 @@ export const Book = ({ data }) => {
         <div className='book'>
             <div className='author'>{author}</div>
             
-            <div>
+            <div className='title-row'>
                 <span className='title'>{title}</span>
-                <span className='action'></span>
+                <span className='action'>
+                    start reading
+                </span>
             </div>
             
             <div className="description">

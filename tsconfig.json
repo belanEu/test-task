@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "rootDir": "./",
+        "outDir": "./backend/build",
+        "baseUrl": "./",
+        "paths": {
+            "cleverJS/*": ["node_modules/cleverJS/build/*"]
+        },
+    },
+    "exclude": ["node_modules", "frontend"],
+    "include": [
+        "backend/**/*",
+        "node_modules/cleverJS/**/*"
+    ],
+    "ts-node": {
+        "compilerOptions": {
+            "target": "ESNext",
+            "module": "CommonJS",
+            "esModuleInterop": true,
+        }
+    }
+}

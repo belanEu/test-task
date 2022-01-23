@@ -1,5 +1,15 @@
 {
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register backend/index.ts"
+  },
   "dependencies": {
-    "create-react-app": "^5.0.0"
+    "cleverJS": "github:cleverJS/backend#1.7.1",
+    "sqlite3": "^5.0.2",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "typescript": "^4.5.5"
+  },
+  "devDependencies": {
+    "fastify-cors": "^6.0.2"
   }
 }

@@ -4,6 +4,12 @@ import { loggerNamespace } from 'cleverJS/core/logger/logger';
 import { HttpServer } from 'cleverJS/core/http/HttpServer';
 import { ISettings } from './configs/SettingsInterface';
 import { BookController } from './controllers/BookController';
+import { ConditionDbParser } from 'cleverJS/build/core/db/sql/condition/ConditionDbParser';
+import { EntityFactory } from 'cleverJS/core/entity/EntityFactory';
+import { BookService } from './modules/BookService';
+import { BookResource } from './modules/resource/BookResource';
+import { Book } from './modules/Book';
+import { castBook } from './modules/helper';
 
 export class App {
     protected readonly logger = loggerNamespace('App');
@@ -11,15 +17,24 @@ export class App {
     protected readonly connection: Knex;
 
     constructor(settings: ISettings) {
-        this.logger = loggerNamespace('App');
         this.httpServer = new HttpServer(settings.http);
-        this.connection = knex(settings.connection);
         this.registerFastifyPlugins();
+        this.connection = knex(settings.connection);
 
-        new BookController({http: this.httpServer});
+        const bookService = new BookService(
+            new BookResource(
+                this.connection,
+                new ConditionDbParser(),
+                new EntityFactory(Book, castBook)
+            )
+        );
+        new BookController({
+            http: this.httpServer,
+            bookService
+        });
     }
 
-    async run() {
+    public async run() {
         await this.httpServer.start();
         try {
             const rows = await this.connection.raw('select 1 as result');
@@ -33,7 +48,7 @@ export class App {
         }
     }
 
-    destroy() {
+    public destroy() {
         return async () => {
             await this.httpServer.destroy();
             await new Promise(resolve => {
@@ -43,7 +58,7 @@ export class App {
         };
     }
 
-    registerFastifyPlugins() {
+    protected registerFastifyPlugins() {
         this.httpServer.getServer().register(cors, {
             origin: true,
             credentials: true,

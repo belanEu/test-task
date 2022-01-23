@@ -1,11 +1,16 @@
 {
     "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
         "rootDir": "./",
         "outDir": "./backend/build",
         "baseUrl": "./",
         "paths": {
             "cleverJS/*": ["node_modules/cleverJS/build/*"]
         },
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "node"
     },
     "exclude": ["node_modules", "frontend"],
     "include": [
@@ -17,6 +22,8 @@
             "target": "ESNext",
             "module": "CommonJS",
             "esModuleInterop": true,
+            "resolveJsonModule": true,
+            "moduleResolution": "node"
         }
     }
 }

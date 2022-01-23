@@ -3,6 +3,7 @@ import cors from 'fastify-cors';
 import { loggerNamespace } from 'cleverJS/core/logger/logger';
 import { HttpServer } from 'cleverJS/core/http/HttpServer';
 import { ISettings } from './configs/SettingsInterface';
+import { BookController } from './controllers/BookController';
 
 export class App {
     protected readonly logger = loggerNamespace('App');
@@ -14,6 +15,8 @@ export class App {
         this.httpServer = new HttpServer(settings.http);
         this.connection = knex(settings.connection);
         this.registerFastifyPlugins();
+
+        new BookController({http: this.httpServer});
     }
 
     async run() {

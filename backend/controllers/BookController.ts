@@ -15,10 +15,16 @@ interface ChangeBookStatusRequest {
     status: string
 }
 
-interface PaginatorParams {
+interface BookListRequest {
     page: number,
-    itemsPerPage: number
+    itemsPerPage: number,
+    status: string,
+    tags?: string
 }
+
+interface StatusCountersRequest {
+    statuses: string
+};
 
 export class BookController {
     protected readonly logger = loggerNamespace('BookController');
@@ -29,14 +35,15 @@ export class BookController {
         this.initRoutes();
     }
 
-    protected actionBookList = async(request: FastifyRequest) => {
-        const { page, itemsPerPage } = request.query as PaginatorParams;
+    protected actionBookList = async (request: FastifyRequest) => {
+        const { page, itemsPerPage, status } = request.query as BookListRequest;
 
         const paginator = new Paginator();
         paginator.setCurrentPage(page);
         paginator.setItemsPerPage(itemsPerPage);
 
-        const result = await this.deps.bookService.fetchBookList(paginator);
+        const result = await this.deps.bookService
+            .fetchBookList(status, paginator);
 
         return {
             success: true,
@@ -46,15 +53,66 @@ export class BookController {
         };
     }
 
-    protected actionChangeBookStatus = async(request: FastifyRequest) => {
+    protected actionFilteredBookList = async (request: FastifyRequest) => {
+        const { page, itemsPerPage, status, tags } = request.query as BookListRequest;
+
+        const paginator = new Paginator();
+        paginator.setCurrentPage(page);
+        paginator.setItemsPerPage(itemsPerPage);        
+
+        const result = await this.deps.bookService.fetchFilteredBookList(
+            { status, tags: tags.split(',').map(tag => tag.trim()) },
+            paginator
+        );
+
+        return {
+            success: true,
+            data: {
+                result,
+            },
+        };
+    }
+
+    protected actionStatusCounters = async (request: FastifyRequest) => {
+        const { statuses } = request.query as StatusCountersRequest;
+        
+        const promiseMap = new Map();
+        statuses.split(',').forEach(status => promiseMap.set(status, this.deps.bookService.countBooksByStatus(status)));
+
+        const result = await resolvePromiseMap(promiseMap);
+
+        return {
+            success: true,
+            data: {
+                result,
+            },
+        };
+    }
+
+    protected actionChangeBookStatus = async (request: FastifyRequest) => {
         const { bookId, status } = request.body as ChangeBookStatusRequest;
         // todo: change status
     }
 
     protected initRoutes() {
         const app = this.deps.http.getServer();
-        
-        app.get('/api/books', this.actionBookList);
+        const opts = {
+            schema: {
+                querystring: {
+                    type: 'object',
+                    properties: {
+                        page: { type: 'number' },
+                        itemsPerPage: { type: 'number' },
+                        status: { type: 'string' },
+                        tags: { type: 'string' }
+                    }
+                }
+            }
+        };
+
+        app.get('/api/books', opts, this.actionBookList);
+        app.get('/api/filtered_books', opts, this.actionFilteredBookList);
+        app.get('/api/status_counters', this.actionStatusCounters);
         app.post('/api/book_status', this.actionChangeBookStatus);
     }
 }

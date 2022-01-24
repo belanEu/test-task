@@ -1,5 +1,6 @@
 import { FastifyRequest } from 'fastify';
 import { loggerNamespace } from 'cleverJS/build/core/logger/logger';
+import { resolvePromiseMap } from 'cleverJS/core/utils/promise';
 import { HttpServer } from 'cleverJS/build/core/http/HttpServer';
 import { Paginator } from 'cleverJS/core/utils/Paginator';
 import { BookService } from './../modules/BookService';

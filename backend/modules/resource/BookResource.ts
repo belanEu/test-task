@@ -9,4 +9,8 @@ export class BookResource extends AbstractDBResource<Book> {
     public findAllBooks(condition: Condition) {
         return this.findAll(condition);
     }
+
+    public findBooksWithPagination(condition: Condition, pagination: Paginator) {
+        return this.findAll(condition, pagination);
+    }
 }

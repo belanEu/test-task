@@ -32,4 +32,10 @@ export class BookService extends AbstractService<Book, BookResource> {
             .filter(book => book.tags.some(tag => tagsMap[tag] !== undefined))
             .slice(start, end);
     }
+
+    public countBooksByStatus(status: string) {
+        return this.resource.count(new Condition({
+            conditions: [{ operator: TConditionOperator.EQUALS, field: 'status', value: status }]
+        }));
+    }
 }

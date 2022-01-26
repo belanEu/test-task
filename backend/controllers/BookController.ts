@@ -22,10 +22,6 @@ interface BookListRequest {
     tags?: string
 }
 
-interface StatusCountersRequest {
-    statuses: string
-};
-
 export class BookController {
     protected readonly logger = loggerNamespace('BookController');
     protected readonly deps: IDependencies;
@@ -73,13 +69,25 @@ export class BookController {
         };
     }
 
-    protected actionStatusCounters = async (request: FastifyRequest) => {
-        const { statuses } = request.query as StatusCountersRequest;
-        
+    protected actionStatusCounters = async (request: FastifyRequest) => {        
         const promiseMap = new Map();
-        statuses.split(',').forEach(status => promiseMap.set(status, this.deps.bookService.countBooksByStatus(status)));
+        const statuses = {
+            toread: 'To read',
+            inprogress: 'In progress',
+            done: 'Done'
+        };
+        Object.keys(statuses).forEach(
+            status => promiseMap.set(status, this.deps.bookService.countBooksByStatus(status))
+        );
 
-        const result = await resolvePromiseMap(promiseMap);
+        const preResult = await resolvePromiseMap(promiseMap);
+        const result = preResult.map(({id, item}) => {
+            return {
+                id,
+                label: statuses[id],
+                count: item
+            }
+        });
 
         return {
             success: true,

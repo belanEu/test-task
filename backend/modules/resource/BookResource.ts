@@ -13,4 +13,9 @@ export class BookResource extends AbstractDBResource<Book> {
     public findBooksWithPagination(condition: Condition, pagination: Paginator) {
         return this.findAll(condition, pagination);
     }
+
+    public async upadateBookStatusById(id: number, status: string) {
+        const book = await this.findById(id);
+        return book ? this.connection.table(this.table).where('id', '=', id).update({ status }) : false;
+    }
 }

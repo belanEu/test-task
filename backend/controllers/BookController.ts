@@ -91,7 +91,13 @@ export class BookController {
 
     protected actionChangeBookStatus = async (request: FastifyRequest) => {
         const { bookId, status } = request.body as ChangeBookStatusRequest;
-        // todo: change status
+        const result = await this.deps.bookService.changeBookStatus(bookId, status);
+        return {
+            success: result !== false,
+            data: {
+                result: result
+            },
+        };
     }
 
     protected initRoutes() {

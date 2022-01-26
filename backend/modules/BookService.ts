@@ -38,4 +38,8 @@ export class BookService extends AbstractService<Book, BookResource> {
             conditions: [{ operator: TConditionOperator.EQUALS, field: 'status', value: status }]
         }));
     }
+
+    public changeBookStatus(id: number, status: string) {
+        return this.resource.upadateBookStatusById(id, status);
+    }
 }

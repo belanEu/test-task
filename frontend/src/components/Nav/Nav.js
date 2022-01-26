@@ -5,14 +5,14 @@ export const Nav = ({ tabs, chosenTab }) => {
     return (
         <nav>
             {
-            Object.keys(tabs).map(tab => {
-                const isChosen = tab === chosenTab;
+            tabs.map(tab => {
+                const isChosen = tab.id === chosenTab;
                 return (
-                <div key={tab} className={cn('item', {chosen: isChosen})}>
+                <div key={tab.id} className={cn('item', {chosen: isChosen})}>
                     <a className={cn({chosen: isChosen})}
-                        href={isChosen ? '' : `/?tab=${tab}`}
+                        href={isChosen ? '#' : `/?tab=${tab.id}`}
                     >
-                        { tabs[tab] }
+                        { `${tab.label} (${tab.count})`}
                     </a>
                 </div>
                 )

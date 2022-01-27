@@ -6,16 +6,19 @@ import { getTagsFromUrl, goTo, getTabFromUrl } from "../../utils";
 
 export const BookList = ({books, tags}) => {
     const handleAddTag = tag => {
-        const tags = getTagsFromUrl(), tab = getTabFromUrl();
+        const tags = getTagsFromUrl();
         if (!tags.includes(tag)) {
             tags.push(tag);
-            goTo(tab, tags);
+            goTo(getTabFromUrl(), tags);
         }
+    };
+    const handleClearTags = () => {
+        goTo(getTabFromUrl());
     };
 
     return (
         <section className="book-list">
-            { tags.length > 0 ? <Filters tags={tags} /> : '' }
+            { tags.length > 0 ? <Filters tags={tags} clear={() => handleClearTags()} /> : '' }
             { books.map(book => <Book key={book.id + book.title} data={book} clickTag={tag => handleAddTag(tag)} />) }
             { books.length === 0 ? <EmptyList /> : '' }
         </section>

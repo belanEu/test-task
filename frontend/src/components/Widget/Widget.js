@@ -1,14 +1,13 @@
 import { Nav } from '../Nav/Nav';
 import { BookList } from '../BookList/BookList';
 import './Widget.sass';
-import { getBooks, getTabs } from '../../stubs';
-import { getTabFromUrl, getTagsFromUrl } from '../../utils';
+import { getTabFromUrl } from '../../utils';
 
-export const Widget = () => {
+export const Widget = ({tabs, tags, books}) => {
     return (
         <div className="widget">
-            <Nav tabs={getTabs()} chosenTab={getTabFromUrl()} />
-            <BookList books={getBooks()} tags={getTagsFromUrl()} />
+            <Nav tabs={tabs} chosenTab={getTabFromUrl()} />
+            <BookList books={books} tags={tags} />
         </div>
     );
 };

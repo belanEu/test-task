@@ -2,19 +2,22 @@ import { Book } from "./Book";
 import { EmptyList } from "./EmptyList";
 import { Filters } from "./Filters";
 import './BookList.sass';
+import { getTagsFromUrl, goTo, getTabFromUrl } from "../../utils";
 
 export const BookList = ({books, tags}) => {
-    const hasToBeFiltered = tags.length > 0;
-    const renderBooks = hasToBeFiltered ?
-    books.filter(book => book.tags.some(tag => tags.includes(tag)))
-    :
-    books;
-    
+    const handleAddTag = tag => {
+        const tags = getTagsFromUrl(), tab = getTabFromUrl();
+        if (!tags.includes(tag)) {
+            tags.push(tag);
+            goTo(tab, tags);
+        }
+    };
+
     return (
         <section className="book-list">
-            { hasToBeFiltered ? <Filters tags={tags} /> : '' }
-            { renderBooks.map(book => <Book key={book.id} data={book} />) }
-            { renderBooks.length === 0 ? <EmptyList /> : '' }
+            { tags.length > 0 ? <Filters tags={tags} /> : '' }
+            { books.map(book => <Book key={book.id + book.title} data={book} clickTag={tag => handleAddTag(tag)} />) }
+            { books.length === 0 ? <EmptyList /> : '' }
         </section>
     );
 };

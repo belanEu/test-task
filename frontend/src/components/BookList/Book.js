@@ -1,7 +1,7 @@
 import { Tag } from './Tag';
 import './BookList.sass';
 
-export const Book = ({ data }) => {
+export const Book = ({ data, clickTag }) => {
     const { id, author, title, description, tags } = data;
 
     return (
@@ -21,7 +21,9 @@ export const Book = ({ data }) => {
 
             <div className='tags'>
                 { tags.map(tag => <span key={`${id}-${tag}`} className='tag-wrapper'>
-                    <Tag text={tag} />
+                    <div onClick={() => clickTag(tag)}>
+                        <Tag text={tag} />
+                    </div>
                 </span>) }
             </div>
         </div>

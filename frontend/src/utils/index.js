@@ -27,7 +27,7 @@ const tabs = getTabs();
  */
 export const goTo = (tab, tags = []) => {
     const url = new URL(window.location);
-    url.searchParams.set('status', tab);
+    url.searchParams.set('tab', tab);
     if (tags.length > 0) {
         url.searchParams.set('tags', tags.join(','));
     } else {

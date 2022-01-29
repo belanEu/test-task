@@ -1,8 +1,10 @@
 import { Tag } from './Tag';
 import './BookList.sass';
+import { getNextActions } from '../../stubs';
 
-export const Book = ({ data, clickTag }) => {
-    const { id, author, title, description, tags } = data;
+export const Book = ({ data, clickTag, changeBookStatus }) => {
+    const { id, author, title, description, tags, status } = data;
+    const nextAction = getNextActions()[status];
 
     return (
         <div className='book'>
@@ -10,8 +12,8 @@ export const Book = ({ data, clickTag }) => {
             
             <div className='title-row'>
                 <span className='title'>{title}</span>
-                <span className='action'>
-                    start reading
+                <span className='action' onClick={() => changeBookStatus(id, nextAction.status)}>
+                    { nextAction.label }
                 </span>
             </div>
             

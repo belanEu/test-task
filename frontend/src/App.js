@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import throttle from 'lodash.throttle';
 import './App.sass';
 import { Nav } from './components/Nav/Nav';
 import { BookList } from './components/BookList/BookList';
@@ -11,11 +12,19 @@ function App() {
   const [tabs, setTabs] = useState([]);
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  const [hasMoreBooks, setHasMoreBooks] = useState(true);
+  const [isWidgetLoading, setIsWidgetLoading] = useState(true);
+  const [isPartLoading, setIsPartLoading] = useState(false);
 
   const [book, setNextStatus] = useState(defaultBookStatus);
 
   const currentTab = getTabFromUrl(), tags = getTagsFromUrl();
+
+  const addBooks = () => {
+    if (document.body.clientHeight - window.scrollY <= window.innerHeight) {
+      setPage(page + 1);
+    }
+  };
 
   const updateWidgetByChangingBookStatus = (bookId, status) => {
     const index = books.findIndex(item => item.id === bookId);
@@ -42,26 +51,40 @@ function App() {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      setIsLoading(true);
-      const data = await api.getTabBooks(currentTab, page);
-      setIsLoading(false);
-      setBooks(data);
-    };
-    const fetchFilteredBooks = async () => {
-      setIsLoading(true);
-      const data = await api.getFilteredBooks(currentTab, tags, page);
-      setIsLoading(false);
-      setBooks(data);
-    };
-    const fetchData = () => {
+      setIsWidgetLoading(true);
+      let data;
       if (tags.length > 0) {
-        fetchFilteredBooks();
+        data = await api.getFilteredBooks(currentTab, tags, page);
       } else {
-        fetchBooks();
+        data = await api.getTabBooks(currentTab, page);
+      }
+      setIsWidgetLoading(false);
+      setBooks(data);
+    };
+
+    fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    const fetchAndAddBooks = async () => {
+      setIsPartLoading(true);
+      let data;
+      if (tags.length > 0) {
+        data = await api.getFilteredBooks(currentTab, tags, page);
+      } else {
+        data = await api.getTabBooks(currentTab, page);
+      }
+      setIsPartLoading(false);
+      if (data.length > 0) {
+        setBooks(books.concat(data));
+      } else {
+        setHasMoreBooks(false);
       }
     };
 
-    fetchData();
+    if (!isWidgetLoading && hasMoreBooks && !isPartLoading) {
+      fetchAndAddBooks();
+    }
   }, [page]);
 
   useEffect(() => {
@@ -77,14 +100,23 @@ function App() {
     changeBookStatus();
   }, [book.id]);
 
+  useEffect(() => {
+    window.addEventListener('scroll', throttle(() => addBooks(), 500));
+
+    return () => {
+      window.removeEventListener('scroll', addBooks());
+    };
+  }, []);
+
   return (
     <div className="app">
-      {isLoading ? 'Loading ...' :
+      {isWidgetLoading ? 'Loading...' :
       <div className="widget">
         <Nav tabs={tabs} chosenTab={currentTab} />
         <BookList books={books} tags={tags}
         handleChangeBookStatus={(id, status) => updateWidgetByChangingBookStatus(id, status)}
         />
+        {isPartLoading ? <span style={{padding: "20px"}}>Loading...</span> : ''}
       </div>
       }
     </div>

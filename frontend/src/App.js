@@ -20,12 +20,6 @@ function App() {
 
   const currentTab = getTabFromUrl(), tags = getTagsFromUrl();
 
-  const addBooks = () => {
-    if (document.body.clientHeight - window.scrollY <= window.innerHeight) {
-      setPage(page + 1);
-    }
-  };
-
   const updateWidgetByChangingBookStatus = (bookId, status) => {
     const index = books.findIndex(item => item.id === bookId);
     books.splice(index, 1);
@@ -101,12 +95,20 @@ function App() {
   }, [book.id]);
 
   useEffect(() => {
-    window.addEventListener('scroll', throttle(() => addBooks(), 500));
+    const addBooks = throttle(() => {
+      if (
+        hasMoreBooks && !isPartLoading &&
+        document.body.clientHeight - window.scrollY <= window.innerHeight * 2
+      ) {
+        setPage(page + 1);
+      }
+    }, 400);
+    window.addEventListener('scroll', addBooks);
 
     return () => {
-      window.removeEventListener('scroll', addBooks());
+      window.removeEventListener('scroll', addBooks);
     };
-  }, []);
+  }, [page, isPartLoading]);
 
   return (
     <div className="app">

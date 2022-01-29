@@ -20,7 +20,7 @@ export const BookList = ({books, tags, handleChangeBookStatus}) => {
         <section className="book-list">
             { tags.length > 0 ? <Filters tags={tags} clear={() => handleClearTags()} /> : '' }
             { books.map(book =>
-                <Book key={book.id + book.title}
+                <Book key={`${book.id}_${book.title}_${book.author}`}
                 data={book}
                 clickTag={tag => handleAddTag(tag)}
                 changeBookStatus={(id, status) => handleChangeBookStatus(id, status)}

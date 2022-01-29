@@ -22,7 +22,7 @@ export const Book = ({ data, clickTag, changeBookStatus }) => {
             </div>
 
             <div className='tags'>
-                { tags.map(tag => <span key={`${id}-${tag}`} className='tag-wrapper'>
+                { [...(new Set(tags))].map(tag => <span key={`${id}-${tag}`} className='tag-wrapper'>
                     <div onClick={() => clickTag(tag)}>
                         <Tag text={tag} />
                     </div>

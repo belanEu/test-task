@@ -27,5 +27,11 @@ export const api = {
     getFilteredBooks: async (tab, tags, page = DEFAULT_PAGE, itemsPerPage = DEFAULT_ITEMS_PER_PAGE) => {
         return await fetchWrapper(() => fetch(`${BASE_URL}/filtered_books?status=${tab}&tags=${tags}&page=${page}&itemsPerPage=${itemsPerPage}`));
     },
-    changeBookStatus: async (bookId, status) => {},
+    changeBookStatus: async (bookId, status) => {
+        return await fetchWrapper(() => fetch(`${BASE_URL}/book_status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bookId, status })
+        }));
+    },
 };

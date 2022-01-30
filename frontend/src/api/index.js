@@ -15,7 +15,7 @@ const fetchWrapper = async cb => {
     }
 };
 
-const DEFAULT_PAGE = 1, DEFAULT_ITEMS_PER_PAGE = 10;
+export const DEFAULT_PAGE = 1, DEFAULT_ITEMS_PER_PAGE = 5;
 
 export const api = {
     getStatusCounters: async () => {

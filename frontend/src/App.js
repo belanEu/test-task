@@ -29,9 +29,9 @@ function App() {
     nextTab.count++;
     currTab.count--;
     
-    setNextStatus({id: bookId, status});
     setTabs(tabs);
     setBooks(books);
+    setNextStatus({id: bookId, status});
   };
 
   useEffect(() => {
@@ -61,14 +61,16 @@ function App() {
 
   useEffect(() => {
     const fetchAndAddBooks = async () => {
-      setIsPartLoading(true);
       let data;
+
+      setIsPartLoading(true);
       if (tags.length > 0) {
         data = await api.getFilteredBooks(currentTab, tags, page);
       } else {
         data = await api.getTabBooks(currentTab, page);
       }
       setIsPartLoading(false);
+
       if (data.length > 0) {
         setBooks(books.concat(data));
       } else {
@@ -102,7 +104,7 @@ function App() {
       ) {
         setPage(page + 1);
       }
-    }, 400);
+    }, 500);
     window.addEventListener('scroll', addBooks);
 
     return () => {
@@ -119,6 +121,7 @@ function App() {
         handleChangeBookStatus={(id, status) => updateWidgetByChangingBookStatus(id, status)}
         />
         {isPartLoading ? <span style={{padding: "20px"}}>Loading...</span> : ''}
+        {hasMoreBooks ? <span style={{cursor: 'pointer', padding: "20px"}} onClick={() => setPage(page + 1)}>Load more</span> : ''}
       </div>
       }
     </div>

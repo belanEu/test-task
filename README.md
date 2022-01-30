@@ -2,8 +2,8 @@
 
 как запустить приложение:
 
-npm run start - на localhost:8000 поднимется серверная часть
-cd frontend ; npm run start - на localhost:3000 поднимется веб-приложение
+1. npm run start - на localhost:8000 поднимется серверная часть
+2. cd frontend ; npm run start - на localhost:3000 поднимется веб-приложение
 
 
 что не успел доделать:
